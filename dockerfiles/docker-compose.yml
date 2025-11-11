@@ -6,13 +6,12 @@ services:
       context: .
       dockerfile: ./backend/mysql.Dockerfile
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
-      MYSQL_ROOT_HOST: '%'
-      MYSQL_ROOT_PASSWORD: pass
-      MYSQL_DATABASE: database
+      MYSQL_HOST: db
       MYSQL_USER: username
       MYSQL_PASSWORD: password
+      MYSQL_DATABASE: database
     networks:
       - my_network
     volumes:
@@ -28,11 +27,10 @@ services:
     ports:
       - "93:80"
     environment:
-      MYSQL_ROOT_HOST: 165.232.144.187
-      MYSQL_ROOT_PASSWORD: pass
-      MYSQL_DATABASE: database
+      MYSQL_HOST: db
       MYSQL_USER: username
-      MYSQL_PASSWORD: password    
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: database  
     volumes:
       - ./frontend/default:/etc/php/sites-available/default
       - ./frontend/src:/var/www/html
