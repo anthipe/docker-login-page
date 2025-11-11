@@ -26,23 +26,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows == 1) {
         // User found, verify password
-	    $row = $result->fetch_assoc();
-	    if ($spassword == $row['password']) {
+        $row = $result->fetch_assoc();
+        if ($spassword == $row['password']) {
             // Password is correct, login successful
-		    // echo "Login successful";
+            // echo "Login successful";
             session_start();
-	    $_SESSION['authenticated'] = true;
-	    $_SESSION['username'] = $susername;
+            $_SESSION['authenticated'] = true;
+            $_SESSION['username'] = $susername;
+
+            // login attemps
+            $insert = "INSERT INTO logins (user_id) VALUES (?)";
+            $stmt3 = $conn->prepare($insert);
+            $stmt3->bind_param("i", $row['id']);
+            $stmt3->execute();
+
             header("Location: home.php"); 
-                exit();
+            exit();
         } else {
             // Incorrect password
             echo "Invalid username or password";
         }
-        } 
-        else {
-             // User not found
+    } else {
+        // User not found
         echo "Invalid user";
     }
 }
-
+?>
