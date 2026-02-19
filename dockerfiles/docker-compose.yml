@@ -1,19 +1,20 @@
-version: '3'
+version: '3.8'
 
 services:
   db:
+    platform: linux/amd64  
     build:
       context: .
       dockerfile: ./backend/mysql.Dockerfile
     ports:
       - "3307:3306"
     environment:
-      MYSQL_HOST: db
-      MYSQL_USER: username
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: MyThesisD@ta2025
       MYSQL_DATABASE: database
+      MYSQL_USER: username
+      MYSQL_PASSWORD: myThesisDAT@2025
     networks:
-      - my_network
+      - login_net
     volumes:
       - db_data2:/var/lib/mysql
     restart: always
@@ -21,26 +22,47 @@ services:
   php:
     build:
       context: .
-      dockerfile: ./frontend/php.Dockerfile   
-    networks:
-      - my_network
+      dockerfile: ./frontend/php.Dockerfile
     ports:
-      - "93:80"
+      - "80:80"
     environment:
       MYSQL_HOST: db
       MYSQL_USER: username
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: database  
+      MYSQL_PASSWORD: myThesisDAT@2025
+      MYSQL_DATABASE: database
     volumes:
       - ./frontend/default:/etc/php/sites-available/default
       - ./frontend/src:/var/www/html
     depends_on:
       - db
+    networks:
+      - login_net
     restart: always
-     
+
+  extra-db:
+    image: mysql:5.7
+    platform: linux/amd64  
+    container_name: data
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: MyThesisd@t@2025
+      MYSQL_DATABASE: data
+      MYSQL_USER: user
+      MYSQL_PASSWORD: MyThesisD@t@2025
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - mysql-db:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - extra_net
+
 networks:
-  my_network:
-    driver: bridge
+  login_net:
+  extra_net:
 
 volumes:
   db_data2:
+  mysql-db:

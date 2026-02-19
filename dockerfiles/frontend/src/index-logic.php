@@ -11,7 +11,7 @@ $dbpass     = getenv('MYSQL_PASSWORD') ?: 'password';
 $dbname     = getenv('MYSQL_DATABASE') ?: 'database';
 
 // Create connection
-$conn = new mysqli($servername, $dbuser, $dbpass, $dbname, 3306);
+$conn = new mysqli($servername, $dbuser, $dbpass, $dbname);
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
